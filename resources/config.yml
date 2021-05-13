@@ -1,0 +1,21 @@
+# Adds a fancy scoreboard to the server
+scoreboard:
+  # Do you want to enable this module?
+  enabled: true
+
+  # Lines to be shown on the scoreboard
+  default:
+    - '&e&lARKFLAME'
+    - '&r'
+    - '&fConectados: &a%server_online%'
+    - '&r '
+    - '&fDinero: &6$%vault_eco_balance_fixed%'
+    - '&r  '
+    - '&eplay.arkflame.com'
+  mundo:
+    - '&e&lARKFLAME'
+    - '&r'
+    - '&fConectados: &a%server_online%'
+    - '<not_zero>&fEnderPearl: &a%gamemechanics_enderpearl_cooldown%'
+    - '&r '
+    - '&eplay.arkflame.com'

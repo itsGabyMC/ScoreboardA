@@ -19,15 +19,15 @@ import dev._2lstudios.gameessentials.tasks.SecondTask;
 import dev._2lstudios.gameessentials.utils.ConfigurationUtil;
 import dev._2lstudios.gameessentials.utils.VersionUtil;
 
-public class GameEssentials extends JavaPlugin {
+public class Main extends JavaPlugin {
     private static EssentialsManager essentialsManager;
     private SecondTask secondTask;
 
     static {
-        GameEssentials.essentialsManager = null;
+        Main.essentialsManager = null;
     }
 
-    public GameEssentials() {
+    public Main() {
         this.secondTask = null;
     }
 
@@ -38,14 +38,14 @@ public class GameEssentials extends JavaPlugin {
         if (this.getServer().getPluginManager().isPluginEnabled("Teams")) {
             teamsHook.hook();
         }
-        GameEssentials.essentialsManager = new EssentialsManager(this, configurationUtil);
-        new CommandInitializer(this, GameEssentials.essentialsManager);
-        this.secondTask = new SecondTask((Plugin) this, GameEssentials.essentialsManager, teamsHook);
-        new ListenerInitializer((Plugin) this, GameEssentials.essentialsManager, this.secondTask);
+        Main.essentialsManager = new EssentialsManager(this, configurationUtil);
+        new CommandInitializer(this, Main.essentialsManager);
+        this.secondTask = new SecondTask((Plugin) this, Main.essentialsManager, teamsHook);
+        new ListenerInitializer((Plugin) this, Main.essentialsManager, this.secondTask);
         for (final Player player : this.getServer().getOnlinePlayers()) {
-            GameEssentials.essentialsManager.getPlayerManager().addPlayer(player);
-            if (GameEssentials.essentialsManager.getVariableManager().getSidebarManager().isEnabled()
-                    || GameEssentials.essentialsManager.getVariableManager().isNametagEnabled()) {
+            Main.essentialsManager.getPlayerManager().addPlayer(player);
+            if (Main.essentialsManager.getVariableManager().getSidebarManager().isEnabled()
+                    || Main.essentialsManager.getVariableManager().isNametagEnabled()) {
                 player.setScoreboard(this.getServer().getScoreboardManager().getNewScoreboard());
             }
             this.secondTask.update(player, 0);
@@ -53,11 +53,11 @@ public class GameEssentials extends JavaPlugin {
     }
 
     public synchronized void onDisable() {
-        final PlayerManager playerManager = GameEssentials.essentialsManager.getPlayerManager();
+        final PlayerManager playerManager = Main.essentialsManager.getPlayerManager();
         final Server server = this.getServer();
-        final boolean scoreboardEnabled = GameEssentials.essentialsManager.getVariableManager().getSidebarManager()
+        final boolean scoreboardEnabled = Main.essentialsManager.getVariableManager().getSidebarManager()
                 .isEnabled();
-        final boolean nametagEnabled = GameEssentials.essentialsManager.getVariableManager().isNametagEnabled();
+        final boolean nametagEnabled = Main.essentialsManager.getVariableManager().isNametagEnabled();
 
         server.getScheduler().cancelTasks((Plugin) this);
         this.secondTask.stop();
@@ -79,6 +79,6 @@ public class GameEssentials extends JavaPlugin {
     }
 
     public static EssentialsManager getEssentialsManager() {
-        return GameEssentials.essentialsManager;
+        return Main.essentialsManager;
     }
 }

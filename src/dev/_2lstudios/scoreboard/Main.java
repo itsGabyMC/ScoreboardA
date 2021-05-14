@@ -35,19 +35,24 @@ public class Main extends JavaPlugin {
         VersionUtil.init();
         final TeamsHook teamsHook = new TeamsHook();
         final ConfigurationUtil configurationUtil = new ConfigurationUtil((Plugin) this);
+        
         if (this.getServer().getPluginManager().isPluginEnabled("Teams")) {
             teamsHook.hook();
         }
+
         Main.essentialsManager = new EssentialsManager(this, configurationUtil);
         new CommandInitializer(this, Main.essentialsManager);
         this.secondTask = new SecondTask((Plugin) this, Main.essentialsManager, teamsHook);
         new ListenerInitializer((Plugin) this, Main.essentialsManager, this.secondTask);
+        
         for (final Player player : this.getServer().getOnlinePlayers()) {
             Main.essentialsManager.getPlayerManager().addPlayer(player);
+
             if (Main.essentialsManager.getVariableManager().getSidebarManager().isEnabled()
                     || Main.essentialsManager.getVariableManager().isNametagEnabled()) {
                 player.setScoreboard(this.getServer().getScoreboardManager().getNewScoreboard());
             }
+
             this.secondTask.update(player, 0);
         }
     }
@@ -60,15 +65,18 @@ public class Main extends JavaPlugin {
         final boolean nametagEnabled = Main.essentialsManager.getVariableManager().isNametagEnabled();
 
         server.getScheduler().cancelTasks((Plugin) this);
-        this.secondTask.stop();
+
         for (final Player player : server.getOnlinePlayers()) {
             final UUID uuid = player.getUniqueId();
             final ScoreboardPlayer essentialsPlayer = playerManager.getPlayer(uuid);
+
             if (essentialsPlayer != null) {
                 final Scoreboard scoreboard = player.getScoreboard();
+
                 if (scoreboardEnabled) {
                     scoreboard.clearSlot(DisplaySlot.SIDEBAR);
                 }
+
                 if (nametagEnabled) {
                     scoreboard.clearSlot(DisplaySlot.BELOW_NAME);
                 }

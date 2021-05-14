@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials.hooks;
+package dev._2lstudios.scoreboard.hooks;
 
 import twolovers.teams.team.TPlayer;
 import org.bukkit.entity.Player;

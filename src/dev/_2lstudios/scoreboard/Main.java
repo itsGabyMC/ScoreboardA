@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials;
+package dev._2lstudios.scoreboard;
 
 import java.util.UUID;
 
@@ -9,15 +9,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 
-import dev._2lstudios.gameessentials.commands.initializers.CommandInitializer;
-import dev._2lstudios.gameessentials.hooks.TeamsHook;
-import dev._2lstudios.gameessentials.instanceables.ScoreboardPlayer;
-import dev._2lstudios.gameessentials.listeners.initializers.ListenerInitializer;
-import dev._2lstudios.gameessentials.managers.EssentialsManager;
-import dev._2lstudios.gameessentials.managers.PlayerManager;
-import dev._2lstudios.gameessentials.tasks.SecondTask;
-import dev._2lstudios.gameessentials.utils.ConfigurationUtil;
-import dev._2lstudios.gameessentials.utils.VersionUtil;
+import dev._2lstudios.scoreboard.commands.initializers.CommandInitializer;
+import dev._2lstudios.scoreboard.hooks.TeamsHook;
+import dev._2lstudios.scoreboard.instanceables.ScoreboardPlayer;
+import dev._2lstudios.scoreboard.listeners.initializers.ListenerInitializer;
+import dev._2lstudios.scoreboard.managers.EssentialsManager;
+import dev._2lstudios.scoreboard.managers.PlayerManager;
+import dev._2lstudios.scoreboard.tasks.SecondTask;
+import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
+import dev._2lstudios.scoreboard.utils.VersionUtil;
 
 public class Main extends JavaPlugin {
     private static EssentialsManager essentialsManager;

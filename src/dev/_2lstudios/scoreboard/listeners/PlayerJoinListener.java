@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials.listeners;
+package dev._2lstudios.scoreboard.listeners;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -7,10 +7,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import dev._2lstudios.gameessentials.managers.EssentialsManager;
-import dev._2lstudios.gameessentials.managers.PlayerManager;
-import dev._2lstudios.gameessentials.managers.VariableManager;
-import dev._2lstudios.gameessentials.tasks.SecondTask;
+import dev._2lstudios.scoreboard.managers.EssentialsManager;
+import dev._2lstudios.scoreboard.managers.PlayerManager;
+import dev._2lstudios.scoreboard.managers.VariableManager;
+import dev._2lstudios.scoreboard.tasks.SecondTask;
 
 public class PlayerJoinListener implements Listener {
     private final Server server;

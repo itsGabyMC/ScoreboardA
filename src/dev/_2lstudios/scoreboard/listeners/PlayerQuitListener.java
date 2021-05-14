@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials.listeners;
+package dev._2lstudios.scoreboard.listeners;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -12,10 +12,10 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import dev._2lstudios.gameessentials.instanceables.ScoreboardPlayer;
-import dev._2lstudios.gameessentials.managers.EssentialsManager;
-import dev._2lstudios.gameessentials.managers.PlayerManager;
-import dev._2lstudios.gameessentials.managers.VariableManager;
+import dev._2lstudios.scoreboard.instanceables.ScoreboardPlayer;
+import dev._2lstudios.scoreboard.managers.EssentialsManager;
+import dev._2lstudios.scoreboard.managers.PlayerManager;
+import dev._2lstudios.scoreboard.managers.VariableManager;
 
 public class PlayerQuitListener implements Listener {
     private final Server server;

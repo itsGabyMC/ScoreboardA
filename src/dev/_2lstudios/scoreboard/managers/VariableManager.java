@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials.managers;
+package dev._2lstudios.scoreboard.managers;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.bukkit.configuration.Configuration;
 
-import dev._2lstudios.gameessentials.utils.ConfigurationUtil;
+import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
 
 public class VariableManager {
     private final ConfigurationUtil configurationUtil;

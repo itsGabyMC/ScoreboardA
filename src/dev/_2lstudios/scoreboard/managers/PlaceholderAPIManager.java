@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials.managers;
+package dev._2lstudios.scoreboard.managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;

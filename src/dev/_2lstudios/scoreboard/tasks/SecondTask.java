@@ -1,14 +1,22 @@
-package dev._2lstudios.gameessentials.tasks;
+package dev._2lstudios.scoreboard.tasks;
 
 import org.bukkit.Location;
 import org.bukkit.scoreboard.Team;
-import dev._2lstudios.gameessentials.utils.VersionUtil;
+
+import dev._2lstudios.scoreboard.hooks.TeamsHook;
+import dev._2lstudios.scoreboard.instanceables.ScoreboardPlayer;
+import dev._2lstudios.scoreboard.managers.EssentialsManager;
+import dev._2lstudios.scoreboard.managers.PlaceholderAPIManager;
+import dev._2lstudios.scoreboard.managers.PlayerManager;
+import dev._2lstudios.scoreboard.managers.SidebarManager;
+import dev._2lstudios.scoreboard.managers.VariableManager;
+import dev._2lstudios.scoreboard.utils.SideboardExpressions;
+import dev._2lstudios.scoreboard.utils.VersionUtil;
+
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.GameMode;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.World;
-import dev._2lstudios.gameessentials.managers.SidebarManager;
-import dev._2lstudios.gameessentials.instanceables.ScoreboardPlayer;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.ChatColor;
 import java.util.HashSet;
@@ -16,16 +24,9 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
-import dev._2lstudios.gameessentials.managers.EssentialsManager;
 import org.bukkit.plugin.Plugin;
-import dev._2lstudios.gameessentials.hooks.TeamsHook;
 import org.bukkit.entity.Player;
 import java.util.Collection;
-import dev._2lstudios.gameessentials.managers.PlaceholderAPIManager;
-import dev._2lstudios.gameessentials.managers.PlayerManager;
-import dev._2lstudios.gameessentials.managers.VariableManager;
-
-import dev._2lstudios.gameessentials.utils.SideboardExpressions;
 
 public class SecondTask {
     private final VariableManager variableManager;

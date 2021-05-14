@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials.instanceables;
+package dev._2lstudios.scoreboard.instanceables;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +8,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
-import dev._2lstudios.gameessentials.managers.PlayerManager;
-import dev._2lstudios.gameessentials.utils.ConfigurationUtil;
+import dev._2lstudios.scoreboard.managers.PlayerManager;
+import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
 
 public class ScoreboardPlayer {
     private final Map<Player, Team> nametagTeams;

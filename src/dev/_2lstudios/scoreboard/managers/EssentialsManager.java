@@ -1,8 +1,11 @@
-package dev._2lstudios.gameessentials.managers;
+package dev._2lstudios.scoreboard.managers;
 
 import java.util.HashSet;
-import dev._2lstudios.gameessentials.utils.ConfigurationUtil;
+
 import org.bukkit.plugin.Plugin;
+
+import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
+
 import org.bukkit.entity.Player;
 import java.util.Collection;
 

@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials.utils;
+package dev._2lstudios.scoreboard.utils;
 
 import java.io.InputStream;
 import java.io.IOException;

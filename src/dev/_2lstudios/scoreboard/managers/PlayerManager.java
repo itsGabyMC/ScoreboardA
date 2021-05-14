@@ -1,4 +1,4 @@
-package dev._2lstudios.gameessentials.managers;
+package dev._2lstudios.scoreboard.managers;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import dev._2lstudios.gameessentials.instanceables.ScoreboardPlayer;
-import dev._2lstudios.gameessentials.utils.ConfigurationUtil;
+import dev._2lstudios.scoreboard.instanceables.ScoreboardPlayer;
+import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
 
 public class PlayerManager {
     private final Plugin plugin;

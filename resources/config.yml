@@ -1,4 +1,3 @@
-# Adds a fancy scoreboard to the server
 scoreboard:
   # Do you want to enable this module?
   enabled: true
@@ -19,3 +18,14 @@ scoreboard:
     - '<not_zero>&fEnderPearl: &a%gamemechanics_enderpearl_cooldown%'
     - '&r '
     - '&eplay.arkflame.com'
+
+nametag:
+  # Do you want to enable this module?
+  enabled: true
+
+  # Worlds were nametag is enabled.
+  whitelist: []
+
+tab:
+  # Do you want to enable this module?
+  enabled: true

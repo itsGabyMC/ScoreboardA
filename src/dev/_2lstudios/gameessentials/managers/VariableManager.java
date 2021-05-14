@@ -22,24 +22,31 @@ public class VariableManager {
         this.reload();
     }
 
-    void reload() {
-        this.configurationUtil.createConfiguration("%datafolder%/config.yml");
-        this.configurationUtil.createConfiguration("%datafolder%/motd.yml");
-        this.configurationUtil.createConfiguration("%datafolder%/spawn.yml");
-        this.configurationUtil.createConfiguration("%datafolder%/kill_actions.yml");
-        final Configuration configYml = (Configuration) this.configurationUtil
-                .getConfiguration("%datafolder%/config.yml");
-        this.nametagWhitelist = new HashSet<String>(configYml.getStringList("nametag.whitelist"));
-        this.nametagEnabled = configYml.getBoolean("nametag.enabled");
-        this.tabEnabled = configYml.getBoolean("tab.enabled");
-        final boolean sideBarEnabled = configYml.getBoolean("scoreboard.enabled");
+    private void reloadNametag(final Configuration config) {
+        this.nametagWhitelist = new HashSet<String>(config.getStringList("nametag.whitelist"));
+        this.nametagEnabled = config.getBoolean("nametag.enabled");
+    }
+
+    private void reloadSidebar(final Configuration config) {
+        final boolean sideBarEnabled = config.getBoolean("scoreboard.enabled");
         final Map<String, Collection<String>> sidebars = new HashMap<String, Collection<String>>();
-        for (final String string : configYml.getConfigurationSection("scoreboard").getKeys(false)) {
+
+        for (final String string : config.getConfigurationSection("scoreboard").getKeys(false)) {
             if (!string.equalsIgnoreCase("enabled")) {
-                sidebars.put(string, configYml.getStringList("scoreboard." + string));
+                sidebars.put(string, config.getStringList("scoreboard." + string));
             }
         }
+
         this.sidebarManager.reload(sideBarEnabled, sidebars);
+    }
+
+    void reload() {
+        final Configuration config = this.configurationUtil.getOrCreate("%datafolder%/config.yml");
+
+        this.tabEnabled = config.getBoolean("tab.enabled");
+
+        reloadNametag(config);
+        reloadSidebar(config);
     }
 
     public boolean isNametagEnabled() {

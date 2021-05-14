@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.CopyOption;
 import java.io.File;
+
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -15,16 +17,18 @@ public class ConfigurationUtil {
         this.plugin = plugin;
     }
 
-    public YamlConfiguration getConfiguration(final String filePath) {
+    public YamlConfiguration get(final String filePath) {
         final File dataFolder = this.plugin.getDataFolder();
         final File file = new File(filePath.replace("%datafolder%", dataFolder.toPath().toString()));
+
         if (file.exists()) {
             return YamlConfiguration.loadConfiguration(file);
         }
+
         return new YamlConfiguration();
     }
 
-    public void createConfiguration(String file) {
+    public void create(String file) {
         try {
             final File dataFolder = this.plugin.getDataFolder();
             file = file.replace("%datafolder%", dataFolder.toPath().toString());
@@ -51,18 +55,7 @@ public class ConfigurationUtil {
         }
     }
 
-    public void saveConfiguration(final YamlConfiguration yamlConfiguration, final String file) {
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            try {
-                yamlConfiguration.save(file.replace("%datafolder%", this.plugin.getDataFolder().toPath().toString()));
-            } catch (IOException e) {
-                System.out.println("[%pluginname%] Unable to save configuration file!".replace("%pluginname%",
-                        this.plugin.getDescription().getName()));
-            }
-        });
-    }
-
-    public void deleteConfiguration(final String fileName) {
+    public void delete(final String fileName) {
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
             final File file = new File(
                     fileName.replace("%datafolder%", this.plugin.getDataFolder().toPath().toString()));
@@ -72,7 +65,7 @@ public class ConfigurationUtil {
         });
     }
 
-    public void saveConfigurationSync(final YamlConfiguration yamlConfiguration, final String file) {
+    public void save(final YamlConfiguration yamlConfiguration, final String file) {
         try {
             final File dataFolder = this.plugin.getDataFolder();
             yamlConfiguration.save(file.replace("%datafolder%", dataFolder.toPath().toString()));
@@ -80,5 +73,17 @@ public class ConfigurationUtil {
             System.out.println("[%pluginname%] Unable to save configuration file!".replace("%pluginname%",
                     this.plugin.getDescription().getName()));
         }
+    }
+
+    public void saveAsync(final YamlConfiguration yamlConfiguration, final String file) {
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            save(yamlConfiguration, file);
+        });
+    }
+
+    public Configuration getOrCreate(String string) {
+        this.create(string);
+
+        return this.get(string);
     }
 }

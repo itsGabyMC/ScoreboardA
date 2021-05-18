@@ -241,8 +241,9 @@ public class SecondTask {
 
                     final Collection<String> scoreboardEntries = scoreboard.getEntries();
 
-                    for (final String entry : scoreboardEntries) {
+                    for (final String entry : new HashSet<>(scoreboardEntries)) {
                         final Score score2 = objective.getScore(entry);
+
                         if (score2 == null || (!actualLines.contains(entry) && score2.isScoreSet())) {
                             scoreboard.resetScores(entry);
                         }

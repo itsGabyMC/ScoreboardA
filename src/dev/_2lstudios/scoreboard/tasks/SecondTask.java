@@ -51,7 +51,8 @@ public class SecondTask {
         server.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             try {
                 if (skipTicks.getAndDecrement() < 0) {
-                    skipTicks.set(10);;
+                    skipTicks.set(10);
+                    ;
                 }
 
                 for (final Player player : server.getOnlinePlayers()) {
@@ -69,21 +70,19 @@ public class SecondTask {
 
     private String getTeamsPrefix(final Player player, final String otherPlayerName) {
         final String prefix = this.placeholderAPIManager.setPlaceholders(player,
-                TEAMS_PREFIX_FORMAT.replace("%player_name%", player.getName()));
+                TEAMS_PREFIX_FORMAT.replace("%player_name%", otherPlayerName));
 
         return this.trimToLength(prefix, 16);
     }
 
     private String getPrefix(final Player player) {
-        final String prefix = this.placeholderAPIManager.setPlaceholders(player,
-                PREFIX_FORMAT.replace("%player_name%", player.getName()));
+        final String prefix = this.placeholderAPIManager.setPlaceholders(player, PREFIX_FORMAT);
 
         return this.trimToLength(prefix, 16);
     }
 
     private String getSuffix(final Player player) {
-        final String suffix = this.placeholderAPIManager.setPlaceholders(player,
-                SUFFIX_FORMAT.replace("%player_name%", player.getName()));
+        final String suffix = this.placeholderAPIManager.setPlaceholders(player, SUFFIX_FORMAT);
 
         return this.trimToLength(suffix, 16);
     }

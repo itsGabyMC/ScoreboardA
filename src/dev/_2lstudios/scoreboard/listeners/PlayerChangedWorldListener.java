@@ -18,8 +18,6 @@ public class PlayerChangedWorldListener implements Listener {
     public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
         final Player player = event.getPlayer();
 
-        if (event.getFrom() != player.getWorld()) {
-            secondTask.update(player, 0);
-        }
+        secondTask.update(player, 0);
     }
 }

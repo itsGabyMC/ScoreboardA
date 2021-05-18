@@ -68,9 +68,9 @@ public class SecondTask {
         return string.substring(0, Math.min(length, string.length()));
     }
 
-    private String getTeamsPrefix(final Player player, final String otherPlayerName) {
+    private String getTeamsPrefix(final Player player, final Player otherPlayer) {
         final String prefix = this.placeholderAPIManager.setPlaceholders(player,
-                TEAMS_PREFIX_FORMAT.replace("%player_name%", otherPlayerName));
+                TEAMS_PREFIX_FORMAT.replace("%player_name%", otherPlayer.getName()));
 
         return this.trimToLength(prefix, 16);
     }
@@ -87,10 +87,10 @@ public class SecondTask {
         return this.trimToLength(suffix, 16);
     }
 
-    private String getPrefix(ScoreboardPlayer scoreboardPlayer, Player player, final String otherPlayerName) {
+    private String getPrefix(final ScoreboardPlayer scoreboardPlayer, final Player player, final Player otherPlayer) {
         if (scoreboardPlayer.isNametag()) {
             if (this.teamsHook.isHooked()) {
-                return this.getTeamsPrefix(player, otherPlayerName);
+                return this.getTeamsPrefix(player, otherPlayer);
             } else {
                 return this.getPrefix(player);
             }
@@ -265,10 +265,7 @@ public class SecondTask {
             return;
         }
 
-        final Collection<Team> teams = scoreboard.getTeams();
-        final Collection<String> nametagWhitelist = this.variableManager.getNametagWhitelist();
         final World world = player.getWorld();
-        final String playerName = player.getName();
 
         for (final Player ply : world.getPlayers()) {
             if (ply.isDead() || !ply.isOnline()) {
@@ -281,40 +278,9 @@ public class SecondTask {
                 continue;
             }
 
-            final World plyWorld = ply.getWorld();
-            final GameMode plyGameMode = ply.getGameMode();
-            Team team = scoreboardPlayer.getNametagTeam(ply);
-
-            if (plyGameMode == GameMode.SPECTATOR
-                    || (!nametagWhitelist.isEmpty() && !nametagWhitelist.contains(plyWorld.getName()))
-                    || (!this.teamsHook.isSameTeam(player, ply)
-                            && ply.hasPotionEffect(PotionEffectType.INVISIBILITY))) {
-                if (team == null || !teams.contains(team)) {
-                    continue;
-                }
-
-                team.unregister();
-                scoreboardPlayer.removeNametagTeam(ply);
-            } else {
-                if (!teams.contains(team)) {
-                    final String plyName = ply.getName();
-                    final String teamName = this.trimToLength(ply.getName(), 16);
-
-                    team = scoreboard.getTeam(teamName);
-
-                    if (team == null) {
-                        team = scoreboard.registerNewTeam(teamName);
-                    }
-
-                    if (VersionUtil.isOneDotNine()) {
-                        team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
-                    }
-
-                    team.addEntry(plyName);
-                    scoreboardPlayer.addNametagTeam(ply, team);
-                }
-
-                final String prefix = getPrefix(scoreboardPly, ply, playerName);
+            if (checkNametagWorld(world) && checkNametagGameMode(ply) && checkNametagTeam(player, ply)) {
+                final Team team = getOrCreateTeam(scoreboard, scoreboardPlayer, ply);
+                final String prefix = getPrefix(scoreboardPly, ply, player);
                 final String suffix = getSuffix(scoreboardPly, ply);
 
                 if (!team.getPrefix().equals(prefix)) {
@@ -324,8 +290,57 @@ public class SecondTask {
                 if (!team.getSuffix().equals(suffix)) {
                     team.setSuffix(suffix);
                 }
+            } else {
+                final Team team = scoreboardPlayer.getNametagTeam(ply);
+
+                if (team != null) {
+                    team.unregister();
+                    scoreboardPlayer.removeNametagTeam(ply);
+                }
             }
         }
+    }
+
+    private boolean checkNametagTeam(final Player player, final Player ply) {
+        return this.teamsHook.isSameTeam(player, ply) || !ply.hasPotionEffect(PotionEffectType.INVISIBILITY);
+    }
+
+    private boolean checkNametagWorld(final World world) {
+        final Collection<String> nametagWhitelist = variableManager.getNametagWhitelist();
+
+        return nametagWhitelist.isEmpty() || nametagWhitelist.contains(world.getName());
+    }
+
+    private boolean checkNametagGameMode(final Player ply) {
+        final GameMode gameMode = ply.getGameMode();
+
+        return gameMode != GameMode.SPECTATOR;
+    }
+
+    private Team getOrCreateTeam(final Scoreboard scoreboard, final ScoreboardPlayer scoreboardPlayer,
+            final Player ply) {
+        final Collection<Team> teams = scoreboard.getTeams();
+        Team team = scoreboardPlayer.getNametagTeam(ply);
+
+        if (!teams.contains(team)) {
+            final String plyName = ply.getName();
+            final String teamName = this.trimToLength(plyName, 16);
+
+            team = scoreboard.getTeam(teamName);
+
+            if (team == null) {
+                team = scoreboard.registerNewTeam(teamName);
+            }
+
+            if (VersionUtil.isOneDotNine()) {
+                team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+            }
+
+            team.addEntry(plyName);
+            scoreboardPlayer.addNametagTeam(ply, team);
+        }
+
+        return team;
     }
 
     private void updateHealthBelow(final Player player, final Scoreboard scoreboard) {

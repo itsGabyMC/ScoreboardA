@@ -2,6 +2,7 @@ package dev._2lstudios.scoreboard.tasks;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -39,6 +40,7 @@ public class SecondTask {
 
     public SecondTask(final Plugin plugin, final EssentialsManager essentialsManager, final TeamsHook teamsHook) {
         final Server server = plugin.getServer();
+        final AtomicInteger skipTicks = new AtomicInteger(10);
 
         this.variableManager = essentialsManager.getVariableManager();
         this.playerManager = essentialsManager.getPlayerManager();
@@ -47,17 +49,13 @@ public class SecondTask {
         this.teamsHook = teamsHook;
 
         server.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-            int skipTicks = 10;
-
             try {
-                --skipTicks;
-
-                for (final Player player : server.getOnlinePlayers()) {
-                    update(player, skipTicks);
+                if (skipTicks.getAndDecrement() < 0) {
+                    skipTicks.set(10);;
                 }
 
-                if (skipTicks <= 0) {
-                    skipTicks = 10;
+                for (final Player player : server.getOnlinePlayers()) {
+                    update(player, skipTicks.get());
                 }
             } catch (final Exception e) {
                 e.printStackTrace();
@@ -146,16 +144,15 @@ public class SecondTask {
             final Scoreboard scoreboard = player.getScoreboard();
 
             if (scoreboard != null) {
-                synchronized (scoreboard) {
-                    if (this.variableManager.getSidebarManager().isEnabled()) {
-                        this.updateScoreboard(player, scoreboard);
-                    }
+                if (this.variableManager.getSidebarManager().isEnabled()) {
+                    this.updateScoreboard(player, scoreboard);
+                }
 
-                    if (this.variableManager.isNametagEnabled()) {
-                        this.updateHealthBelow(player, scoreboard);
-                        if (skipTicks <= 0) {
-                            this.updateNametag(player, scoreboard);
-                        }
+                this.updateHealthBelow(player, scoreboard);
+
+                if (this.variableManager.isNametagEnabled()) {
+                    if (skipTicks == 0) {
+                        this.updateNametag(player, scoreboard);
                     }
                 }
             }
@@ -262,9 +259,9 @@ public class SecondTask {
     }
 
     private void updateNametag(final Player player, final Scoreboard scoreboard) {
-        final ScoreboardPlayer essentialsPlayer = this.playerManager.getPlayer(player.getUniqueId());
+        final ScoreboardPlayer scoreboardPlayer = this.playerManager.getPlayer(player.getUniqueId());
 
-        if (essentialsPlayer == null) {
+        if (scoreboardPlayer == null) {
             return;
         }
 
@@ -275,22 +272,18 @@ public class SecondTask {
 
         for (final Player ply : world.getPlayers()) {
             if (ply.isDead() || !ply.isOnline()) {
-                break;
+                continue;
             }
 
-            if (world != ply.getWorld()) {
-                break;
-            }
+            final ScoreboardPlayer scoreboardPly = this.playerManager.getPlayer(ply.getUniqueId());
 
-            final ScoreboardPlayer essentialsPly = this.playerManager.getPlayer(ply.getUniqueId());
-
-            if (essentialsPly == null) {
-                break;
+            if (scoreboardPly == null) {
+                continue;
             }
 
             final World plyWorld = ply.getWorld();
             final GameMode plyGameMode = ply.getGameMode();
-            Team team = essentialsPlayer.getNametagTeam(ply);
+            Team team = scoreboardPlayer.getNametagTeam(ply);
 
             if (plyGameMode == GameMode.SPECTATOR
                     || (!nametagWhitelist.isEmpty() && !nametagWhitelist.contains(plyWorld.getName()))
@@ -301,7 +294,7 @@ public class SecondTask {
                 }
 
                 team.unregister();
-                essentialsPlayer.removeNametagTeam(ply);
+                scoreboardPlayer.removeNametagTeam(ply);
             } else {
                 if (!teams.contains(team)) {
                     final String plyName = ply.getName();
@@ -318,21 +311,19 @@ public class SecondTask {
                     }
 
                     team.addEntry(plyName);
-                    essentialsPlayer.addNametagTeam(ply, team);
+                    scoreboardPlayer.addNametagTeam(ply, team);
                 }
 
-                final String prefix = getPrefix(essentialsPly, ply, playerName);
-                final String suffix = getSuffix(essentialsPly, ply);
+                final String prefix = getPrefix(scoreboardPly, ply, playerName);
+                final String suffix = getSuffix(scoreboardPly, ply);
 
                 if (!team.getPrefix().equals(prefix)) {
                     team.setPrefix(prefix);
                 }
 
-                if (team.getSuffix().equals(suffix)) {
-                    continue;
+                if (!team.getSuffix().equals(suffix)) {
+                    team.setSuffix(suffix);
                 }
-
-                team.setSuffix(suffix);
             }
         }
     }

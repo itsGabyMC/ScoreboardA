@@ -45,6 +45,7 @@ public class SecondTask {
         this.placeholderAPIManager = essentialsManager.getPlaceholderAPIManager();
         this.autofeedPlayers = essentialsManager.getAutoFeedPlayers();
         this.teamsHook = teamsHook;
+
         server.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             int skipTicks = 10;
 
@@ -111,7 +112,7 @@ public class SecondTask {
 
     private Objective getOrCreateObjective(final String objectiveName, final Scoreboard scoreboard,
             final ScoreboardPlayer scoreboardPlayer) {
-        final Objective lastScoreboardObjective = scoreboardPlayer.getScoreboardObjective();
+        final Objective lastScoreboardObjective = scoreboardPlayer.getObjective(objectiveName);
         final Objective scoreboardObjective;
 
         if (lastScoreboardObjective == null) {
@@ -119,12 +120,11 @@ public class SecondTask {
 
             if (objective == null) {
                 scoreboardObjective = scoreboard.registerNewObjective(objectiveName, "dummy");
-                scoreboardObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
             } else {
                 scoreboardObjective = objective;
             }
 
-            scoreboardPlayer.setScoreboardObjective(scoreboardObjective);
+            scoreboardPlayer.setObjective(objectiveName, scoreboardObjective);
         } else {
             scoreboardObjective = lastScoreboardObjective;
         }
@@ -137,16 +137,20 @@ public class SecondTask {
             if (this.variableManager.isTabEnabled()) {
                 this.updateTab(player);
             }
+
             if (this.autofeedPlayers.contains(player)) {
                 player.setFoodLevel(20);
                 player.setSaturation(4.0f);
             }
+
             final Scoreboard scoreboard = player.getScoreboard();
+
             if (scoreboard != null) {
                 synchronized (scoreboard) {
                     if (this.variableManager.getSidebarManager().isEnabled()) {
                         this.updateScoreboard(player, scoreboard);
                     }
+
                     if (this.variableManager.isNametagEnabled()) {
                         this.updateHealthBelow(player, scoreboard);
                         if (skipTicks <= 0) {
@@ -182,6 +186,10 @@ public class SecondTask {
                 final SidebarManager boardManager = this.variableManager.getSidebarManager();
                 final World world = player.getWorld();
                 Collection<String> list;
+
+                if (objective.getDisplaySlot() != DisplaySlot.SIDEBAR) {
+                    objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                }
 
                 if (world != null) {
                     list = boardManager.getSidebars(player, world.getName().toLowerCase());
@@ -233,7 +241,8 @@ public class SecondTask {
                             --actualSize;
                         }
                     }
-                    final Collection<String> scoreboardEntries = (Collection<String>) scoreboard.getEntries();
+
+                    final Collection<String> scoreboardEntries = scoreboard.getEntries();
 
                     for (final String entry : scoreboardEntries) {
                         final Score score2 = objective.getScore(entry);
@@ -244,10 +253,10 @@ public class SecondTask {
                 }
             }
         } else {
-            final Objective objective2 = essentialsPlayer.getScoreboardObjective();
+            final Objective objective2 = essentialsPlayer.getObjective("2LS_Sidebar");
             if (objective2 != null) {
                 objective2.unregister();
-                essentialsPlayer.setScoreboardObjective(null);
+                essentialsPlayer.setObjective("2LS_Sidebar", null);
             }
         }
     }
@@ -259,7 +268,7 @@ public class SecondTask {
             return;
         }
 
-        final Collection<Team> teams = (Collection<Team>) scoreboard.getTeams();
+        final Collection<Team> teams = scoreboard.getTeams();
         final Collection<String> nametagWhitelist = this.variableManager.getNametagWhitelist();
         final World world = player.getWorld();
         final String playerName = player.getName();
@@ -283,7 +292,7 @@ public class SecondTask {
             final GameMode plyGameMode = ply.getGameMode();
             Team team = essentialsPlayer.getNametagTeam(ply);
 
-            if (plyGameMode == GameMode.SPECTATOR || ply.isInvisible()
+            if (plyGameMode == GameMode.SPECTATOR
                     || (!nametagWhitelist.isEmpty() && !nametagWhitelist.contains(plyWorld.getName()))
                     || (!this.teamsHook.isSameTeam(player, ply)
                             && ply.hasPotionEffect(PotionEffectType.INVISIBILITY))) {
@@ -336,14 +345,17 @@ public class SecondTask {
         }
 
         final World world = player.getWorld();
-        final String worldName = world.getName();
         final GameMode gameMode = player.getGameMode();
 
-        if (!worldName.equalsIgnoreCase("lobby") && gameMode != GameMode.SPECTATOR) {
+        if (gameMode != GameMode.SPECTATOR) {
             final Objective healthObjective = getOrCreateObjective("2LS_Health", scoreboard, scoreboardPlayer);
 
             if (healthObjective != null) {
                 final Location location = player.getLocation();
+
+                if (healthObjective.getDisplaySlot() != DisplaySlot.BELOW_NAME) {
+                    healthObjective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+                }
 
                 if (!healthObjective.getDisplayName().equals(ChatColor.RED + "\u2764")) {
                     healthObjective.setDisplayName(ChatColor.RED + "\u2764");
@@ -362,11 +374,11 @@ public class SecondTask {
                 }
             }
         } else {
-            final Objective objective2 = scoreboardPlayer.getHealthObjective();
+            final Objective objective2 = scoreboardPlayer.getObjective("2LS_Health");
 
             if (objective2 != null) {
                 objective2.unregister();
-                scoreboardPlayer.setHealthObjective(null);
+                scoreboardPlayer.setObjective("2LS_Health", null);
             }
         }
     }

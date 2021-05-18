@@ -29,6 +29,7 @@ public class SidebarManager {
         if (this.customSidebars.containsKey(player)) {
             return this.customSidebars.get(player);
         }
+
         return this.sidebars.getOrDefault(scoreboard, this.sidebars.getOrDefault("default", null));
     }
 

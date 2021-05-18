@@ -7,6 +7,8 @@ commands:
   scoreboard:
     aliases:
       - sb
+  nametag:
+    description: "Hides or shows your nametag"
 softdepend:
   - PlaceholderAPI
   - Teams

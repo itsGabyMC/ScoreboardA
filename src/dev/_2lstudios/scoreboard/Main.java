@@ -42,8 +42,8 @@ public class Main extends JavaPlugin {
 
         Main.essentialsManager = new EssentialsManager(this, configurationUtil);
         new CommandInitializer(this, Main.essentialsManager);
-        this.secondTask = new SecondTask((Plugin) this, Main.essentialsManager, teamsHook);
-        new ListenerInitializer((Plugin) this, Main.essentialsManager, this.secondTask);
+        this.secondTask = new SecondTask(this, Main.essentialsManager, teamsHook);
+        new ListenerInitializer(this, Main.essentialsManager, this.secondTask);
         
         for (final Player player : this.getServer().getOnlinePlayers()) {
             Main.essentialsManager.getPlayerManager().addPlayer(player);

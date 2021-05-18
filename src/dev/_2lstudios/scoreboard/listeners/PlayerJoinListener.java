@@ -9,20 +9,17 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 import dev._2lstudios.scoreboard.managers.EssentialsManager;
 import dev._2lstudios.scoreboard.managers.PlayerManager;
-import dev._2lstudios.scoreboard.managers.VariableManager;
 import dev._2lstudios.scoreboard.tasks.SecondTask;
 
 public class PlayerJoinListener implements Listener {
     private final Server server;
     private final PlayerManager playerManager;
-    private final VariableManager variableManager;
     private final SecondTask secondTask;
 
     public PlayerJoinListener(final Server server, final EssentialsManager essentialsManager,
             final SecondTask secondTask) {
         this.server = server;
         this.playerManager = essentialsManager.getPlayerManager();
-        this.variableManager = essentialsManager.getVariableManager();
         this.secondTask = secondTask;
     }
 
@@ -33,7 +30,7 @@ public class PlayerJoinListener implements Listener {
 
         this.playerManager.addPlayer(player);
 
-        if (this.variableManager.getSidebarManager().isEnabled() || this.variableManager.isNametagEnabled() && player.getScoreboard() != scoreboardManager.getMainScoreboard()) {
+        if (player.getScoreboard() == scoreboardManager.getMainScoreboard()) {
             player.setScoreboard(scoreboardManager.getNewScoreboard());
         }
 

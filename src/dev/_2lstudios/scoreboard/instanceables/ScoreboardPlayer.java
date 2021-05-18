@@ -13,16 +13,14 @@ import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
 
 public class ScoreboardPlayer {
     private final Map<Player, Team> nametagTeams;
-    private Objective scoreboardObjective;
-    private Objective healthObjective;
+    private final Map<String, Objective> objectives;
     private boolean nametag;
     private boolean scoreboard;
 
     public ScoreboardPlayer(final Plugin plugin, final PlayerManager playerManager,
             final ConfigurationUtil configurationUtil, final Player player) {
         this.nametagTeams = new HashMap<Player, Team>();
-        this.scoreboardObjective = null;
-        this.healthObjective = null;
+        this.objectives = new HashMap<String, Objective>();
         this.nametag = true;
         this.scoreboard = true;
     }
@@ -43,22 +41,6 @@ public class ScoreboardPlayer {
         this.scoreboard = scoreboard;
     }
 
-    public void setScoreboardObjective(final Objective objective) {
-        this.scoreboardObjective = objective;
-    }
-
-    public Objective getScoreboardObjective() {
-        return this.scoreboardObjective;
-    }
-
-    public void setHealthObjective(final Objective objective) {
-        this.healthObjective = objective;
-    }
-
-    public Objective getHealthObjective() {
-        return this.healthObjective;
-    }
-
     public void addNametagTeam(final Player player, final Team team) {
         this.nametagTeams.put(player, team);
     }
@@ -73,5 +55,13 @@ public class ScoreboardPlayer {
 
     public void clearNametagTeams() {
         this.nametagTeams.clear();
+    }
+
+    public Objective getObjective(String objectiveName) {
+        return objectives.getOrDefault(objectiveName, null);
+    }
+
+    public void setObjective(String objectiveName, Objective scoreboardObjective) {
+        objectives.put(objectiveName, scoreboardObjective);
     }
 }

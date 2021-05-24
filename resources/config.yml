@@ -15,7 +15,7 @@ scoreboard:
     - '&e&lARKFLAME'
     - '&r'
     - '&fConectados: &a%server_online%'
-    - '<not_zero>&fEnderPearl: &a%gamemechanics_enderpearl_cooldown%'
+    - '[not_ 0]&fEnderPearl: &a%gamemechanics_enderpearl_cooldown%'
     - '&r '
     - '&eplay.arkflame.com'
 

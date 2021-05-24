@@ -3,6 +3,7 @@ package dev._2lstudios.scoreboard.managers;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.configuration.Configuration;
@@ -29,7 +30,7 @@ public class VariableManager {
 
     private void reloadSidebar(final Configuration config) {
         final boolean sideBarEnabled = config.getBoolean("scoreboard.enabled");
-        final Map<String, Collection<String>> sidebars = new HashMap<String, Collection<String>>();
+        final Map<String, List<String>> sidebars = new HashMap<String, List<String>>();
 
         for (final String string : config.getConfigurationSection("scoreboard").getKeys(false)) {
             if (!string.equalsIgnoreCase("enabled")) {

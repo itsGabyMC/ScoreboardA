@@ -204,24 +204,21 @@ public class SecondTask {
                     int actualSize = size;
 
                     for (String line : list) {
-                        line = ChatColor.translateAlternateColorCodes('&',
-                                this.placeholderAPIManager.setPlaceholders(player, line));
+                        line = this.placeholderAPIManager.setPlaceholders(player, line);
 
                         final boolean displayLine = SideboardExpressions.evaluateExpression(line);
 
                         if (!displayLine) {
                             continue;
                         } else {
-                            String expression = SideboardExpressions.extractExpression(line);
-                            if (expression != null) {
-                                line = line.replace("[" + expression + "]", "");
-                            }
+                            line = SideboardExpressions.stripExpressions(line);
                         }
 
-                        if (!line.isEmpty() && !line.contains("[display=false]")) {
+                        if (!line.isEmpty()) {
                             if (line.length() > 40) {
                                 line = line.substring(0, 40);
                             }
+
                             if (actualSize == size) {
                                 final String displayName = objective.getDisplayName();
                                 if (displayName == null || !displayName.equals(line)) {
@@ -233,6 +230,7 @@ public class SecondTask {
                                     score.setScore(actualSize);
                                 }
                             }
+
                             actualLines.add(line);
                             --actualSize;
                         }

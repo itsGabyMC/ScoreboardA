@@ -5,15 +5,15 @@ import java.util.regex.Pattern;
 import net.md_5.bungee.api.ChatColor;
 
 public class SideboardExpressions {
-    final static Pattern equalsIgnoreCase = Pattern.compile("==");
-    final static Pattern equals = Pattern.compile("===");
-    final static Pattern notEqualsIgnoreCase = Pattern.compile("!=");
-    final static Pattern notEquals = Pattern.compile("!==");
+    private final static Pattern equalsIgnoreCase = Pattern.compile("==");
+    private final static Pattern equals = Pattern.compile("===");
+    private final static Pattern notEqualsIgnoreCase = Pattern.compile("!=");
+    private final static Pattern notEquals = Pattern.compile("!==");
 
     // Expressions
     public static boolean endExpression(String line) {
         final String value = line.split("_")[1];
-        return !ChatColor.stripColor(line).endsWith(value);
+        return ChatColor.stripColor(line).endsWith(value);
     }
 
     public static boolean equalsExpression(String line) {
@@ -48,8 +48,8 @@ public class SideboardExpressions {
         return !first.equals(second);
     }
 
-    public static boolean notExpression(String line) {
-        final String value = line.split("_")[1];
+    public static boolean notExpression(final String expression, final String line) {
+        final String value = expression.split("_")[1];
         return !ChatColor.stripColor(line).endsWith(value);
     }
 
@@ -66,31 +66,41 @@ public class SideboardExpressions {
 
         if (expression != null) {
             if (expression.startsWith("end_")) {
-                return SideboardExpressions.endExpression(expression);
+                return SideboardExpressions.endExpression(line);
             }
 
             else if (expression.startsWith("not_")) {
-                return SideboardExpressions.notExpression(expression);
+                return SideboardExpressions.notExpression(expression, line);
             }
 
             else if (expression.contains("!==")) {
-                return SideboardExpressions.notExactExpression(expression);
+                return SideboardExpressions.notExactExpression(line);
             }
 
             else if (expression.contains("!=")) {
-                return SideboardExpressions.notEqualsExpression(expression);
+                return SideboardExpressions.notEqualsExpression(line);
             }
 
             else if (expression.contains("===")) {
-                return SideboardExpressions.exactExpression(expression);
+                return SideboardExpressions.exactExpression(line);
             }
 
             else if (expression.contains("==")) {
-                return SideboardExpressions.equalsExpression(expression);
+                return SideboardExpressions.equalsExpression(line);
             }
         }
 
         return true;
+    }
+
+    public static String stripExpressions(String line) {
+        final String extractedExpression = extractExpression(line);
+
+        if (extractedExpression != null) {
+            return line.replace("[" + extractExpression(line) + "]", "");
+        } else {
+            return line;
+        }
     }
 
 }

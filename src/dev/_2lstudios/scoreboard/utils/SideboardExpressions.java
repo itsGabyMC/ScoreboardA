@@ -1,8 +1,14 @@
 package dev._2lstudios.scoreboard.utils;
 
+import java.util.regex.Pattern;
+
 import net.md_5.bungee.api.ChatColor;
 
 public class SideboardExpressions {
+    final static Pattern equalsIgnoreCase = Pattern.compile("==");
+    final static Pattern equals = Pattern.compile("===");
+    final static Pattern notEqualsIgnoreCase = Pattern.compile("!=");
+    final static Pattern notEquals = Pattern.compile("!==");
 
     // Expressions
     public static boolean endExpression(String line) {
@@ -11,36 +17,40 @@ public class SideboardExpressions {
     }
 
     public static boolean equalsExpression(String line) {
-        final String first = line.split("==")[0];
-        final String second = line.split("==")[1];
+        final String[] split = equalsIgnoreCase.split(line);
+        final String first = split[0];
+        final String second = split[1];
 
         return first.equalsIgnoreCase(second);
     }
 
     public static boolean exactExpression(String line) {
-        final String first = line.split("===")[0];
-        final String second = line.split("===")[1];
+        final String[] split = equals.split(line);
+        final String first = split[0];
+        final String second = split[1];
 
         return first.equals(second);
     }
 
     public static boolean notEqualsExpression(String line) {
-        final String first = line.split("!=")[0];
-        final String second = line.split("!=")[1];
+        final String[] split = notEqualsIgnoreCase.split(line);
+        final String first = split[0];
+        final String second = split[1];
 
         return !first.equalsIgnoreCase(second);
     }
 
     public static boolean notExactExpression(String line) {
-        final String first = line.split("!==")[0];
-        final String second = line.split("!==")[1];
+        final String[] split = notEquals.split(line);
+        final String first = split[0];
+        final String second = split[1];
 
         return !first.equals(second);
     }
 
     public static boolean notExpression(String line) {
         final String value = line.split("_")[1];
-        return ChatColor.stripColor(line).endsWith(value);
+        return !ChatColor.stripColor(line).endsWith(value);
     }
 
     // Utils

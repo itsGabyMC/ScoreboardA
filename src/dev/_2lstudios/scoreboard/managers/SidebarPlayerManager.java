@@ -9,31 +9,35 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import dev._2lstudios.scoreboard.instanceables.ScoreboardPlayer;
+import dev._2lstudios.scoreboard.instanceables.SidebarPlayer;
 import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
 
-public class PlayerManager {
+public class SidebarPlayerManager {
     private final Plugin plugin;
     private final ConfigurationUtil configurationUtil;
-    private final Map<UUID, ScoreboardPlayer> essentialsPlayers;
-    private final Collection<ScoreboardPlayer> changed;
+    private final Map<UUID, SidebarPlayer> essentialsPlayers;
+    private final Collection<SidebarPlayer> changed;
 
-    public PlayerManager(final Plugin plugin, final ConfigurationUtil configurationUtil) {
+    public SidebarPlayerManager(final Plugin plugin, final ConfigurationUtil configurationUtil) {
         this.plugin = plugin;
         this.configurationUtil = configurationUtil;
-        this.essentialsPlayers = new HashMap<UUID, ScoreboardPlayer>();
-        this.changed = new HashSet<ScoreboardPlayer>();
+        this.essentialsPlayers = new HashMap<UUID, SidebarPlayer>();
+        this.changed = new HashSet<SidebarPlayer>();
         for (final Player player : plugin.getServer().getOnlinePlayers()) {
             this.addPlayer(player);
         }
     }
 
-    public ScoreboardPlayer getPlayer(final UUID uuid) {
+    public SidebarPlayer getPlayer(final UUID uuid) {
         return this.essentialsPlayers.getOrDefault(uuid, null);
     }
 
-    public ScoreboardPlayer addPlayer(final Player player) {
-        final ScoreboardPlayer essentialsPlayer = new ScoreboardPlayer(this.plugin, this, this.configurationUtil,
+    public SidebarPlayer getPlayer(Player player) {
+        return getPlayer(player.getUniqueId());
+    }
+
+    public SidebarPlayer addPlayer(final Player player) {
+        final SidebarPlayer essentialsPlayer = new SidebarPlayer(this.plugin, this, this.configurationUtil,
                 player);
         this.essentialsPlayers.put(player.getUniqueId(), essentialsPlayer);
         return essentialsPlayer;
@@ -43,15 +47,15 @@ public class PlayerManager {
         this.essentialsPlayers.remove(uuid);
     }
 
-    public void addChanged(final ScoreboardPlayer essentialsPlayer) {
+    public void addChanged(final SidebarPlayer essentialsPlayer) {
         this.changed.add(essentialsPlayer);
     }
 
-    public Collection<ScoreboardPlayer> getChanged() {
+    public Collection<SidebarPlayer> getChanged() {
         return this.changed;
     }
 
-    public Collection<ScoreboardPlayer> getPlayers() {
+    public Collection<SidebarPlayer> getPlayers() {
         return this.essentialsPlayers.values();
     }
 }

@@ -10,19 +10,19 @@ import org.bukkit.entity.Player;
 import java.util.Collection;
 
 public class EssentialsManager {
-    private final PlayerManager playerManager;
+    private final SidebarPlayerManager playerManager;
     private final VariableManager variableManager;
     private final PlaceholderAPIManager placeholderAPIManager;
     private final Collection<Player> autoFeedPlayers;
 
     public EssentialsManager(final Plugin plugin, final ConfigurationUtil configurationUtil) {
-        this.playerManager = new PlayerManager(plugin, configurationUtil);
+        this.playerManager = new SidebarPlayerManager(plugin, configurationUtil);
         this.variableManager = new VariableManager(configurationUtil);
         this.placeholderAPIManager = new PlaceholderAPIManager();
         this.autoFeedPlayers = new HashSet<Player>();
     }
 
-    public PlayerManager getPlayerManager() {
+    public SidebarPlayerManager getPlayerManager() {
         return this.playerManager;
     }
 

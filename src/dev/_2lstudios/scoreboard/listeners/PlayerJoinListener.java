@@ -8,32 +8,45 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import dev._2lstudios.scoreboard.managers.EssentialsManager;
-import dev._2lstudios.scoreboard.managers.PlayerManager;
-import dev._2lstudios.scoreboard.tasks.SecondTask;
+import dev._2lstudios.scoreboard.managers.SidebarPlayerManager;
+import dev._2lstudios.scoreboard.managers.VariableManager;
+import dev._2lstudios.scoreboard.updaters.NametagUpdater;
+import dev._2lstudios.scoreboard.updaters.SidebarUpdater;
+import dev._2lstudios.scoreboard.updaters.TabUpdater;
 
 public class PlayerJoinListener implements Listener {
     private final Server server;
-    private final PlayerManager playerManager;
-    private final SecondTask secondTask;
+    private final SidebarPlayerManager scoreboardPlayerManager;
+    private final NametagUpdater nametagUpdater;
+    private final SidebarUpdater sidebarUpdater;
+    private final TabUpdater tabUpdater;
+    private final VariableManager variableManager;
 
     public PlayerJoinListener(final Server server, final EssentialsManager essentialsManager,
-            final SecondTask secondTask) {
+            final NametagUpdater nametagUpdater, final SidebarUpdater sidebarUpdater, final TabUpdater tabUpdater,
+            final VariableManager variableManager) {
         this.server = server;
-        this.playerManager = essentialsManager.getPlayerManager();
-        this.secondTask = secondTask;
+        this.scoreboardPlayerManager = essentialsManager.getPlayerManager();
+        this.nametagUpdater = nametagUpdater;
+        this.sidebarUpdater = sidebarUpdater;
+        this.tabUpdater = tabUpdater;
+        this.variableManager = variableManager;
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
-        final ScoreboardManager scoreboardManager = this.server.getScoreboardManager();
+        final ScoreboardManager scoreboardManager = server.getScoreboardManager();
 
-        this.playerManager.addPlayer(player);
+        scoreboardPlayerManager.addPlayer(player);
 
-        if (player.getScoreboard() == scoreboardManager.getMainScoreboard()) {
+        if (variableManager.getSidebarManager().isEnabled() || variableManager.isNametagEnabled()
+                && player.getScoreboard() == scoreboardManager.getMainScoreboard()) {
             player.setScoreboard(scoreboardManager.getNewScoreboard());
         }
 
-        this.secondTask.update(player, 0);
+        nametagUpdater.updateAsync(player);
+        sidebarUpdater.updateAsync(player);
+        tabUpdater.updateAsync(player);
     }
 }

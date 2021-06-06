@@ -5,24 +5,27 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
-import dev._2lstudios.scoreboard.managers.PlayerManager;
+import dev._2lstudios.scoreboard.managers.SidebarPlayerManager;
 import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
 
-public class ScoreboardPlayer {
+public class SidebarPlayer {
     private final Map<Player, Team> nametagTeams;
     private final Map<String, Objective> objectives;
     private boolean nametag;
     private boolean scoreboard;
+    private boolean visible;
 
-    public ScoreboardPlayer(final Plugin plugin, final PlayerManager playerManager,
+    public SidebarPlayer(final Plugin plugin, final SidebarPlayerManager playerManager,
             final ConfigurationUtil configurationUtil, final Player player) {
         this.nametagTeams = new HashMap<Player, Team>();
         this.objectives = new HashMap<String, Objective>();
         this.nametag = true;
         this.scoreboard = true;
+        this.visible = !player.hasPotionEffect(PotionEffectType.INVISIBILITY);
     }
 
     public boolean isNametag() {
@@ -63,5 +66,13 @@ public class ScoreboardPlayer {
 
     public void setObjective(String objectiveName, Objective scoreboardObjective) {
         objectives.put(objectiveName, scoreboardObjective);
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

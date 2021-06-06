@@ -5,19 +5,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-import dev._2lstudios.scoreboard.tasks.SecondTask;
+import dev._2lstudios.scoreboard.updaters.NametagUpdater;
+import dev._2lstudios.scoreboard.updaters.SidebarUpdater;
 
 public class PlayerChangedWorldListener implements Listener {
-    private final SecondTask secondTask;
+    private final NametagUpdater nametagUpdater;
+    private final SidebarUpdater sidebarUpdater;
 
-    public PlayerChangedWorldListener(final SecondTask secondTask) {
-        this.secondTask = secondTask;
+    public PlayerChangedWorldListener(final NametagUpdater nametagUpdater, final SidebarUpdater sidebarUpdater) {
+        this.nametagUpdater = nametagUpdater;
+        this.sidebarUpdater = sidebarUpdater;
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
         final Player player = event.getPlayer();
 
-        secondTask.update(player, 0);
+        nametagUpdater.updateAsync(player);
+        sidebarUpdater.updateAsync(player);
     }
 }

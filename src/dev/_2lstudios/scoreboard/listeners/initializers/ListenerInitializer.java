@@ -9,15 +9,13 @@ import dev._2lstudios.scoreboard.listeners.PlayerJoinListener;
 import dev._2lstudios.scoreboard.listeners.PlayerQuitListener;
 import dev._2lstudios.scoreboard.managers.EssentialsManager;
 import dev._2lstudios.scoreboard.managers.VariableManager;
-import dev._2lstudios.scoreboard.tasks.AutoFeedRunnable;
 import dev._2lstudios.scoreboard.updaters.NametagUpdater;
 import dev._2lstudios.scoreboard.updaters.SidebarUpdater;
 import dev._2lstudios.scoreboard.updaters.TabUpdater;
 
 public class ListenerInitializer {
     public ListenerInitializer(final Plugin plugin, final NametagUpdater nametagUpdater,
-            final SidebarUpdater sidebarUpdater, final TabUpdater tabUpdater, final EssentialsManager essentialsManager,
-            final AutoFeedRunnable secondTask) {
+            final SidebarUpdater sidebarUpdater, final TabUpdater tabUpdater, final EssentialsManager essentialsManager) {
         final Server server = plugin.getServer();
         final PluginManager pluginManager = server.getPluginManager();
         final VariableManager variableManager = essentialsManager.getVariableManager();

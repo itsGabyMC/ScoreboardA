@@ -18,7 +18,6 @@ import dev._2lstudios.scoreboard.managers.PlaceholderAPIManager;
 import dev._2lstudios.scoreboard.managers.PrefixSuffixManager;
 import dev._2lstudios.scoreboard.managers.SidebarPlayerManager;
 import dev._2lstudios.scoreboard.managers.VariableManager;
-import dev._2lstudios.scoreboard.tasks.AutoFeedRunnable;
 import dev._2lstudios.scoreboard.tasks.HealthBarRunnable;
 import dev._2lstudios.scoreboard.tasks.NametagRunnable;
 import dev._2lstudios.scoreboard.tasks.SidebarRunnable;
@@ -31,11 +30,6 @@ import dev._2lstudios.scoreboard.utils.VersionUtil;
 
 public class Main extends JavaPlugin {
     private static EssentialsManager essentialsManager;
-    private AutoFeedRunnable secondTask;
-
-    public Main() {
-        this.secondTask = null;
-    }
 
     public synchronized void onEnable() {
         VersionUtil.init();
@@ -59,13 +53,10 @@ public class Main extends JavaPlugin {
                 prefixSuffixManager, variableManager, teamsHook);
         final SidebarUpdater sidebarUpdater = new SidebarUpdater(this, sidebarPlayerManager, variableManager,
                 placeholderAPIManager);
-                final TabUpdater tabUpdater = new TabUpdater(this, prefixSuffixManager);
+        final TabUpdater tabUpdater = new TabUpdater(this, prefixSuffixManager);
 
         new CommandInitializer(this, essentialsManager);
-        new ListenerInitializer(this, nametagUpdater, sidebarUpdater, tabUpdater, essentialsManager, secondTask);
-
-        server.getScheduler().runTaskTimerAsynchronously(this, new AutoFeedRunnable(this, essentialsManager, teamsHook),
-                20L, 20L);
+        new ListenerInitializer(this, nametagUpdater, sidebarUpdater, tabUpdater, essentialsManager);
         server.getScheduler().runTaskTimerAsynchronously(this, new HealthBarRunnable(server, healthbarUpdater), 20L,
                 20L);
         server.getScheduler().runTaskTimerAsynchronously(this,

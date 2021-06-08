@@ -57,6 +57,7 @@ public class Main extends JavaPlugin {
 
         new CommandInitializer(this, essentialsManager);
         new ListenerInitializer(this, nametagUpdater, sidebarUpdater, tabUpdater, essentialsManager);
+        
         server.getScheduler().runTaskTimerAsynchronously(this, new HealthBarRunnable(server, healthbarUpdater), 20L,
                 20L);
         server.getScheduler().runTaskTimerAsynchronously(this,

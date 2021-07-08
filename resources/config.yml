@@ -1,5 +1,4 @@
 scoreboard:
-  # Do you want to enable this module?
   enabled: true
 
   # Lines to be shown on the scoreboard
@@ -20,12 +19,13 @@ scoreboard:
     - '&eplay.arkflame.com'
 
 nametag:
-  # Do you want to enable this module?
   enabled: true
 
   # Worlds were nametag is enabled.
   whitelist: []
 
+health:
+  enabled: true
+
 tab:
-  # Do you want to enable this module?
   enabled: true

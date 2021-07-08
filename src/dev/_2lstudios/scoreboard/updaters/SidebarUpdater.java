@@ -34,6 +34,12 @@ public class SidebarUpdater {
     }
 
     public void update(final Player player) {
+        final SidebarManager sidebarManager = variableManager.getSidebarManager();
+
+        if (!sidebarManager.isEnabled()) {
+            return;
+        }
+
         final Scoreboard scoreboard = player.getScoreboard();
         final SidebarPlayer essentialsPlayer = sidebarPlayerManager.getPlayer(player.getUniqueId());
 
@@ -46,7 +52,6 @@ public class SidebarUpdater {
                     essentialsPlayer);
 
             if (objective != null) {
-                final SidebarManager boardManager = variableManager.getSidebarManager();
                 final World world = player.getWorld();
                 Collection<String> list;
 
@@ -55,9 +60,9 @@ public class SidebarUpdater {
                 }
 
                 if (world != null) {
-                    list = boardManager.getSidebars(player, world.getName().toLowerCase());
+                    list = sidebarManager.getSidebars(player, world.getName().toLowerCase());
                 } else {
-                    list = boardManager.getSidebars(player, "default");
+                    list = sidebarManager.getSidebars(player, "default");
                 }
 
                 if (list != null && !list.isEmpty()) {

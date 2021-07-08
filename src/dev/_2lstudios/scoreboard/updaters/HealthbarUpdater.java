@@ -12,16 +12,23 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import dev._2lstudios.scoreboard.instanceables.SidebarPlayer;
 import dev._2lstudios.scoreboard.managers.SidebarPlayerManager;
+import dev._2lstudios.scoreboard.managers.VariableManager;
 import dev._2lstudios.scoreboard.utils.ScoreboardUtil;
 
 public class HealthbarUpdater {
     private final SidebarPlayerManager playerManager;
+    private final VariableManager variableManager;
 
-    public HealthbarUpdater(final SidebarPlayerManager playerManager) {
+    public HealthbarUpdater(final SidebarPlayerManager playerManager, final VariableManager variableManager) {
         this.playerManager = playerManager;
+        this.variableManager = variableManager;
     }
 
     public void update(final Player player) {
+        if (!variableManager.isHealthEnabled()) {
+            return;
+        }
+
         final Scoreboard scoreboard = player.getScoreboard();
         final SidebarPlayer scoreboardPlayer = playerManager.getPlayer(player.getUniqueId());
 
@@ -32,7 +39,7 @@ public class HealthbarUpdater {
         final World world = player.getWorld();
         final GameMode gameMode = player.getGameMode();
 
-        if (gameMode != GameMode.SPECTATOR) {
+        if (gameMode != GameMode.SPECTATOR && player.isOnline()) {
             final Objective healthObjective = ScoreboardUtil.getOrCreateObjective("2LS_Health", scoreboard, scoreboardPlayer);
 
             if (healthObjective != null) {

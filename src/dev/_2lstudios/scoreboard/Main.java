@@ -48,7 +48,7 @@ public class Main extends JavaPlugin {
         final SidebarPlayerManager sidebarPlayerManager = essentialsManager.getPlayerManager();
         final PlaceholderAPIManager placeholderAPIManager = essentialsManager.getPlaceholderAPIManager();
         final PrefixSuffixManager prefixSuffixManager = new PrefixSuffixManager(essentialsManager, teamsHook);
-        final HealthbarUpdater healthbarUpdater = new HealthbarUpdater(sidebarPlayerManager);
+        final HealthbarUpdater healthbarUpdater = new HealthbarUpdater(sidebarPlayerManager, variableManager);
         final NametagUpdater nametagUpdater = new NametagUpdater(this, placeholderAPIManager, sidebarPlayerManager,
                 prefixSuffixManager, variableManager, teamsHook);
         final SidebarUpdater sidebarUpdater = new SidebarUpdater(this, sidebarPlayerManager, variableManager,

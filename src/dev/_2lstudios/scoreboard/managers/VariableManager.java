@@ -15,6 +15,7 @@ public class VariableManager {
     private final SidebarManager sidebarManager;
     private Collection<String> nametagWhitelist;
     private boolean nametagEnabled;
+    private boolean healthEnabled;
     private boolean tabEnabled;
 
     public VariableManager(final ConfigurationUtil configurationUtil) {
@@ -44,6 +45,7 @@ public class VariableManager {
     void reload() {
         final Configuration config = this.configurationUtil.getOrCreate("%datafolder%/config.yml");
 
+        this.healthEnabled = config.getBoolean("health.enabled");
         this.tabEnabled = config.getBoolean("tab.enabled");
 
         reloadNametag(config);
@@ -52,6 +54,10 @@ public class VariableManager {
 
     public boolean isNametagEnabled() {
         return this.nametagEnabled;
+    }
+
+    public boolean isHealthEnabled() {
+        return this.healthEnabled;
     }
 
     public boolean isTabEnabled() {

@@ -139,11 +139,11 @@ public class NametagUpdater {
     }
 
     public void update() {
-        final Collection<? extends Player> onlinePlayers = plugin.getServer().getOnlinePlayers();
-
         if (!variableManager.isNametagEnabled()) {
             return;
         }
+
+        final Collection<? extends Player> onlinePlayers = plugin.getServer().getOnlinePlayers();
 
         for (final Player otherPlayer : onlinePlayers) {
             update(otherPlayer);

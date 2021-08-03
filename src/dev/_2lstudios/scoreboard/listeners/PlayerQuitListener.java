@@ -43,12 +43,16 @@ public class PlayerQuitListener implements Listener {
         this.autofeedPlayers.remove(player);
         essentialsPlayer.clearNametagTeams();
 
-        if (scoreboardEnabled || nametagEnabled) {
+        if (scoreboardEnabled) {
             scoreboard.clearSlot(DisplaySlot.SIDEBAR);
         }
 
-        if (nametagEnabled) {
+        if (variableManager.isHealthEnabled()) {
             scoreboard.clearSlot(DisplaySlot.BELOW_NAME);
+        }
+
+        if (nametagEnabled) {
+            scoreboard.clearSlot(DisplaySlot.PLAYER_LIST);
 
             for (final Player ply : this.server.getOnlinePlayers()) {
                 final SidebarPlayer essentialsPly = this.playerManager.getPlayer(ply.getUniqueId());

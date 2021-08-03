@@ -89,8 +89,7 @@ public class Main extends JavaPlugin {
     public synchronized void onDisable() {
         final SidebarPlayerManager playerManager = Main.essentialsManager.getPlayerManager();
         final Server server = this.getServer();
-        final boolean scoreboardEnabled = Main.essentialsManager.getVariableManager().getSidebarManager().isEnabled();
-        final boolean nametagEnabled = Main.essentialsManager.getVariableManager().isNametagEnabled();
+        final VariableManager variableManager = Main.essentialsManager.getVariableManager();
 
         server.getScheduler().cancelTasks((Plugin) this);
 
@@ -101,12 +100,16 @@ public class Main extends JavaPlugin {
             if (essentialsPlayer != null) {
                 final Scoreboard scoreboard = player.getScoreboard();
 
-                if (scoreboardEnabled) {
+                if (variableManager.getSidebarManager().isEnabled()) {
                     scoreboard.clearSlot(DisplaySlot.SIDEBAR);
                 }
-
-                if (nametagEnabled) {
+        
+                if (variableManager.isHealthEnabled()) {
                     scoreboard.clearSlot(DisplaySlot.BELOW_NAME);
+                }
+        
+                if (variableManager.isNametagEnabled()) {
+                    scoreboard.clearSlot(DisplaySlot.PLAYER_LIST);
                 }
 
                 playerManager.removePlayer(uuid);

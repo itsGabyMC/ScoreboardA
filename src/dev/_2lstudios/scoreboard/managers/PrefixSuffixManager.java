@@ -14,7 +14,7 @@ public class PrefixSuffixManager {
     private final PlaceholderAPIManager placeholderAPIManager;
     private final TeamsHook teamsHook;
 
-    public PrefixSuffixManager(final EssentialsManager essentialsManager, final TeamsHook teamsHook) {
+    public PrefixSuffixManager(final MainManager essentialsManager, final TeamsHook teamsHook) {
         this.placeholderAPIManager = essentialsManager.getPlaceholderAPIManager();
         this.teamsHook = teamsHook;
     }

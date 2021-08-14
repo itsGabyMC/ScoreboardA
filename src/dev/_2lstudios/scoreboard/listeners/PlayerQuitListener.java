@@ -3,28 +3,22 @@ package dev._2lstudios.scoreboard.listeners;
 import java.util.Collection;
 import java.util.UUID;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
-import dev._2lstudios.scoreboard.instanceables.SidebarPlayer;
-import dev._2lstudios.scoreboard.managers.EssentialsManager;
+import dev._2lstudios.scoreboard.managers.MainManager;
 import dev._2lstudios.scoreboard.managers.SidebarPlayerManager;
 import dev._2lstudios.scoreboard.managers.VariableManager;
+import dev._2lstudios.scoreboard.utils.ScoreboardUtil;
 
 public class PlayerQuitListener implements Listener {
-    private final Server server;
     private final SidebarPlayerManager playerManager;
     private final VariableManager variableManager;
     private final Collection<Player> autofeedPlayers;
 
-    public PlayerQuitListener(final Server server, final EssentialsManager essentialsManager) {
-        this.server = server;
+    public PlayerQuitListener(final MainManager essentialsManager) {
         this.playerManager = essentialsManager.getPlayerManager();
         this.variableManager = essentialsManager.getVariableManager();
         this.autofeedPlayers = essentialsManager.getAutoFeedPlayers();
@@ -34,43 +28,10 @@ public class PlayerQuitListener implements Listener {
     public void onPlayerQuit(final PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         final UUID uuid = player.getUniqueId();
-        final Scoreboard scoreboard = player.getScoreboard();
-        final String playerName = player.getName();
-        final SidebarPlayer essentialsPlayer = this.playerManager.getPlayer(uuid);
-        final boolean scoreboardEnabled = this.variableManager.getSidebarManager().isEnabled();
-        final boolean nametagEnabled = this.variableManager.isNametagEnabled();
+
+        ScoreboardUtil.clearPlayer(variableManager, player);
 
         this.autofeedPlayers.remove(player);
-        essentialsPlayer.clearNametagTeams();
-
-        if (scoreboardEnabled) {
-            scoreboard.clearSlot(DisplaySlot.SIDEBAR);
-        }
-
-        if (variableManager.isHealthEnabled()) {
-            scoreboard.clearSlot(DisplaySlot.BELOW_NAME);
-        }
-
-        if (nametagEnabled) {
-            scoreboard.clearSlot(DisplaySlot.PLAYER_LIST);
-
-            for (final Player ply : this.server.getOnlinePlayers()) {
-                final SidebarPlayer essentialsPly = this.playerManager.getPlayer(ply.getUniqueId());
-
-                if (essentialsPly != null) {
-                    essentialsPly.removeNametagTeam(player);
-                }
-
-                final Scoreboard scoreboard2 = ply.getScoreboard();
-                final Team team = scoreboard2.getTeam(playerName);
-
-                if (team != null) {
-                    team.unregister();
-                }
-                scoreboard2.resetScores(playerName);
-            }
-        }
-
         this.playerManager.removePlayer(uuid);
     }
 }

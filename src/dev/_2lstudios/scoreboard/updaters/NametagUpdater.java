@@ -124,10 +124,6 @@ public class NametagUpdater {
     }
 
     public void update(final Player player) {
-        if (!variableManager.isNametagEnabled()) {
-            return;
-        }
-
         for (final Player otherPlayer : plugin.getServer().getOnlinePlayers()) {
             addNametag(otherPlayer, player);
             addNametag(player, otherPlayer);
@@ -145,8 +141,8 @@ public class NametagUpdater {
 
         final Collection<? extends Player> onlinePlayers = plugin.getServer().getOnlinePlayers();
 
-        for (final Player otherPlayer : onlinePlayers) {
-            update(otherPlayer);
+        for (final Player player : onlinePlayers) {
+            update(player);
         }
     }
 }

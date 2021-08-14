@@ -9,13 +9,13 @@ import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
 import org.bukkit.entity.Player;
 import java.util.Collection;
 
-public class EssentialsManager {
+public class MainManager {
     private final SidebarPlayerManager playerManager;
     private final VariableManager variableManager;
     private final PlaceholderAPIManager placeholderAPIManager;
     private final Collection<Player> autoFeedPlayers;
 
-    public EssentialsManager(final Plugin plugin, final ConfigurationUtil configurationUtil) {
+    public MainManager(final Plugin plugin, final ConfigurationUtil configurationUtil) {
         this.playerManager = new SidebarPlayerManager(plugin, configurationUtil);
         this.variableManager = new VariableManager(configurationUtil);
         this.placeholderAPIManager = new PlaceholderAPIManager();

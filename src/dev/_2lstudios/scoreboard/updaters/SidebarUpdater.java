@@ -3,6 +3,7 @@ package dev._2lstudios.scoreboard.updaters;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -130,5 +131,15 @@ public class SidebarUpdater {
 
     public void updateAsync(final Player player) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> update(player));
+    }
+
+    public void update() {
+        if (!variableManager.getSidebarManager().isEnabled()) {
+            return;
+        }
+
+        for (final Player player : Bukkit.getServer().getOnlinePlayers()) {
+            update(player);
+        }
     }
 }

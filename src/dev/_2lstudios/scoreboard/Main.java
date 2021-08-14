@@ -4,32 +4,27 @@ import java.util.UUID;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Scoreboard;
 
 import dev._2lstudios.scoreboard.commands.initializers.CommandInitializer;
 import dev._2lstudios.scoreboard.hooks.TeamsHook;
-import dev._2lstudios.scoreboard.instanceables.SidebarPlayer;
 import dev._2lstudios.scoreboard.listeners.initializers.ListenerInitializer;
-import dev._2lstudios.scoreboard.managers.EssentialsManager;
+import dev._2lstudios.scoreboard.managers.MainManager;
 import dev._2lstudios.scoreboard.managers.PlaceholderAPIManager;
 import dev._2lstudios.scoreboard.managers.PrefixSuffixManager;
 import dev._2lstudios.scoreboard.managers.SidebarPlayerManager;
 import dev._2lstudios.scoreboard.managers.VariableManager;
-import dev._2lstudios.scoreboard.tasks.HealthBarRunnable;
-import dev._2lstudios.scoreboard.tasks.NametagRunnable;
-import dev._2lstudios.scoreboard.tasks.SidebarRunnable;
+import dev._2lstudios.scoreboard.tasks.TaskInitializer;
 import dev._2lstudios.scoreboard.updaters.HealthbarUpdater;
 import dev._2lstudios.scoreboard.updaters.NametagUpdater;
 import dev._2lstudios.scoreboard.updaters.SidebarUpdater;
 import dev._2lstudios.scoreboard.updaters.TabUpdater;
 import dev._2lstudios.scoreboard.utils.ConfigurationUtil;
+import dev._2lstudios.scoreboard.utils.ScoreboardUtil;
 import dev._2lstudios.scoreboard.utils.VersionUtil;
 
 public class Main extends JavaPlugin {
-    private static EssentialsManager essentialsManager;
+    private static MainManager mainManager;
 
     public synchronized void onEnable() {
         VersionUtil.init();
@@ -42,82 +37,42 @@ public class Main extends JavaPlugin {
             teamsHook.hook();
         }
 
-        essentialsManager = new EssentialsManager(this, configurationUtil);
+        mainManager = new MainManager(this, configurationUtil);
 
-        final VariableManager variableManager = essentialsManager.getVariableManager();
-        final SidebarPlayerManager sidebarPlayerManager = essentialsManager.getPlayerManager();
-        final PlaceholderAPIManager placeholderAPIManager = essentialsManager.getPlaceholderAPIManager();
-        final PrefixSuffixManager prefixSuffixManager = new PrefixSuffixManager(essentialsManager, teamsHook);
-        final HealthbarUpdater healthbarUpdater = new HealthbarUpdater(sidebarPlayerManager, variableManager);
+        final VariableManager variableManager = mainManager.getVariableManager();
+        final SidebarPlayerManager sidebarPlayerManager = mainManager.getPlayerManager();
+        final PlaceholderAPIManager placeholderAPIManager = mainManager.getPlaceholderAPIManager();
+        final PrefixSuffixManager prefixSuffixManager = new PrefixSuffixManager(mainManager, teamsHook);
+        final HealthbarUpdater healthbarUpdater = new HealthbarUpdater(this, sidebarPlayerManager, variableManager);
         final NametagUpdater nametagUpdater = new NametagUpdater(this, placeholderAPIManager, sidebarPlayerManager,
                 prefixSuffixManager, variableManager, teamsHook);
         final SidebarUpdater sidebarUpdater = new SidebarUpdater(this, sidebarPlayerManager, variableManager,
                 placeholderAPIManager);
-        final TabUpdater tabUpdater = new TabUpdater(this, prefixSuffixManager);
+        final TabUpdater tabUpdater = new TabUpdater(this, prefixSuffixManager, variableManager);
 
-        new CommandInitializer(this, essentialsManager);
-        new ListenerInitializer(this, nametagUpdater, sidebarUpdater, tabUpdater, essentialsManager);
-
-        if (variableManager.isHealthEnabled()) {
-            server.getScheduler().runTaskTimerAsynchronously(this, new HealthBarRunnable(server, healthbarUpdater), 20L,
-                    20L);
-        }
-
-        if (variableManager.isNametagEnabled()) {
-            server.getScheduler().runTaskTimerAsynchronously(this,
-                    new NametagRunnable(server, sidebarPlayerManager, nametagUpdater), 20L, 20L);
-        }
-
-        if (variableManager.getSidebarManager().isEnabled()) {
-            server.getScheduler().runTaskTimerAsynchronously(this, new SidebarRunnable(server, sidebarUpdater), 20L,
-                    20L);
-        }
+        new CommandInitializer(this, mainManager);
+        new ListenerInitializer(this, nametagUpdater, sidebarUpdater, tabUpdater, mainManager);
+        new TaskInitializer(this, mainManager, healthbarUpdater, nametagUpdater, sidebarUpdater, tabUpdater);
 
         for (final Player player : server.getOnlinePlayers()) {
-            essentialsManager.getPlayerManager().addPlayer(player);
-
-            if (variableManager.getSidebarManager().isEnabled() || variableManager.isNametagEnabled()) {
-                player.setScoreboard(server.getScoreboardManager().getNewScoreboard());
-            }
-
-            nametagUpdater.update(player);
-            sidebarUpdater.update(player);
-            tabUpdater.update(player);
+            mainManager.getPlayerManager().addPlayer(player);
         }
     }
 
     public synchronized void onDisable() {
-        final SidebarPlayerManager playerManager = Main.essentialsManager.getPlayerManager();
+        final SidebarPlayerManager playerManager = Main.mainManager.getPlayerManager();
         final Server server = this.getServer();
-        final VariableManager variableManager = Main.essentialsManager.getVariableManager();
-
-        server.getScheduler().cancelTasks((Plugin) this);
+        final VariableManager variableManager = Main.mainManager.getVariableManager();
 
         for (final Player player : server.getOnlinePlayers()) {
             final UUID uuid = player.getUniqueId();
-            final SidebarPlayer essentialsPlayer = playerManager.getPlayer(uuid);
 
-            if (essentialsPlayer != null) {
-                final Scoreboard scoreboard = player.getScoreboard();
-
-                if (variableManager.getSidebarManager().isEnabled()) {
-                    scoreboard.clearSlot(DisplaySlot.SIDEBAR);
-                }
-        
-                if (variableManager.isHealthEnabled()) {
-                    scoreboard.clearSlot(DisplaySlot.BELOW_NAME);
-                }
-        
-                if (variableManager.isNametagEnabled()) {
-                    scoreboard.clearSlot(DisplaySlot.PLAYER_LIST);
-                }
-
-                playerManager.removePlayer(uuid);
-            }
+            ScoreboardUtil.clearPlayer(variableManager, player);
+            playerManager.removePlayer(uuid);
         }
     }
 
-    public static EssentialsManager getEssentialsManager() {
-        return Main.essentialsManager;
+    public static MainManager getMainManager() {
+        return mainManager;
     }
 }

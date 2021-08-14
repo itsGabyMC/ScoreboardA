@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -16,19 +17,19 @@ import dev._2lstudios.scoreboard.managers.VariableManager;
 import dev._2lstudios.scoreboard.utils.ScoreboardUtil;
 
 public class HealthbarUpdater {
+    private final String HEALTH_OBJECTIVE = "2LS_HP";
+    private final String HEALTH_DISPLAYNAME = ChatColor.RED + "\u2764";
+    private final Plugin plugin;
     private final SidebarPlayerManager playerManager;
     private final VariableManager variableManager;
 
-    public HealthbarUpdater(final SidebarPlayerManager playerManager, final VariableManager variableManager) {
+    public HealthbarUpdater(final Plugin plugin, final SidebarPlayerManager playerManager, final VariableManager variableManager) {
+        this.plugin = plugin;
         this.playerManager = playerManager;
         this.variableManager = variableManager;
     }
 
     public void update(final Player player) {
-        if (!variableManager.isHealthEnabled()) {
-            return;
-        }
-
         final Scoreboard scoreboard = player.getScoreboard();
         final SidebarPlayer scoreboardPlayer = playerManager.getPlayer(player.getUniqueId());
 
@@ -40,7 +41,8 @@ public class HealthbarUpdater {
         final GameMode gameMode = player.getGameMode();
 
         if (gameMode != GameMode.SPECTATOR && player.isOnline()) {
-            final Objective healthObjective = ScoreboardUtil.getOrCreateObjective("2LS_Health", scoreboard, scoreboardPlayer);
+            final Objective healthObjective = ScoreboardUtil.getOrCreateObjective(HEALTH_OBJECTIVE, scoreboard,
+                    scoreboardPlayer);
 
             if (healthObjective != null) {
                 final Location location = player.getLocation();
@@ -49,13 +51,12 @@ public class HealthbarUpdater {
                     healthObjective.setDisplaySlot(DisplaySlot.BELOW_NAME);
                 }
 
-                if (!healthObjective.getDisplayName().equals(ChatColor.RED + "\u2764")) {
-                    healthObjective.setDisplayName(ChatColor.RED + "\u2764");
+                if (!HEALTH_DISPLAYNAME.equals(healthObjective.getDisplayName())) {
+                    healthObjective.setDisplayName(HEALTH_DISPLAYNAME);
                 }
 
                 for (final Player ply : world.getPlayers()) {
-                    if (ply.isOnline() && !ply.isDead() && world == ply.getWorld()
-                            && location.distance(ply.getLocation()) < 12.0) {
+                    if (ply.isOnline() && !ply.isDead() && location.distance(ply.getLocation()) < 10.0) {
                         final int health = (int) ply.getHealth();
                         final Score score = healthObjective.getScore(ply.getName());
 
@@ -68,12 +69,22 @@ public class HealthbarUpdater {
                 }
             }
         } else {
-            final Objective objective2 = scoreboardPlayer.getObjective("2LS_Health");
+            final Objective healthObjective = scoreboardPlayer.getObjective(HEALTH_OBJECTIVE);
 
-            if (objective2 != null) {
-                objective2.unregister();
-                scoreboardPlayer.setObjective("2LS_Health", null);
+            if (healthObjective != null) {
+                healthObjective.unregister();
+                scoreboardPlayer.setObjective(HEALTH_OBJECTIVE, null);
             }
+        }
+    }
+
+    public void update() {
+        if (!variableManager.isHealthEnabled()) {
+            return;
+        }
+
+        for (final Player player : plugin.getServer().getOnlinePlayers()) {
+            update(player);
         }
     }
 }

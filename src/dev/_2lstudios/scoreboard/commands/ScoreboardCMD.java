@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import dev._2lstudios.scoreboard.instanceables.SidebarPlayer;
-import dev._2lstudios.scoreboard.managers.EssentialsManager;
+import dev._2lstudios.scoreboard.managers.MainManager;
 import dev._2lstudios.scoreboard.managers.SidebarPlayerManager;
 
 import org.bukkit.command.Command;
@@ -12,9 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.CommandExecutor;
 
 public class ScoreboardCMD implements CommandExecutor {
-    private final EssentialsManager essentialsManager;
+    private final MainManager essentialsManager;
 
-    public ScoreboardCMD(final EssentialsManager essentialsManager) {
+    public ScoreboardCMD(final MainManager essentialsManager) {
         this.essentialsManager = essentialsManager;
     }
 

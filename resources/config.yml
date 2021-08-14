@@ -10,7 +10,7 @@ scoreboard:
     - '&fDinero: &6$%vault_eco_balance_fixed%'
     - '&r  '
     - '&eplay.arkflame.com'
-  mundo:
+  world:
     - '&e&lARKFLAME'
     - '&r'
     - '&fConectados: &a%server_online%'

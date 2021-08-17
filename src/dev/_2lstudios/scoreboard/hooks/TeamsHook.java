@@ -1,9 +1,9 @@
 package dev._2lstudios.scoreboard.hooks;
 
-import twolovers.teams.team.TPlayer;
+import dev._2lstudios.teams.team.TPlayer;
 import org.bukkit.entity.Player;
-import twolovers.teams.Teams;
-import twolovers.teams.managers.TPlayerManager;
+import dev._2lstudios.teams.Teams;
+import dev._2lstudios.teams.managers.TPlayerManager;
 
 public class TeamsHook {
     private TPlayerManager tPlayerManager;

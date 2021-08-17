@@ -50,7 +50,7 @@
         <repository>
             <id>2lstudios-repo</id>
             <url>https://repo.2lstudios.dev/</url>
-          </repository>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -69,6 +69,6 @@
             <groupId>dev._2lstudios</groupId>
             <artifactId>Teams</artifactId>
             <version>0.0.1</version>
-          </dependency>
+        </dependency>
     </dependencies>
 </project>

@@ -62,6 +62,10 @@ public class SideboardExpressions {
     }
 
     public static boolean evaluateExpression(String line) {
+        if (line.contains("[display=false]")) {
+            return false;
+        }
+
         final String expression = SideboardExpressions.extractExpression(line);
 
         if (expression != null) {
